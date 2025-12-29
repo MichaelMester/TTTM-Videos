@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="he">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>מדריך התוסף - ארכיון וידאו טניס שולחן</title>
+  <link rel="stylesheet" href="../css/styles.css">
+  <style>
+    .tutorial-container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 20px;
+      background: #fff;
+    }
+
+    .tutorial-header {
+      text-align: center;
+      margin-bottom: 40px;
+      padding: 30px 20px;
+      background: #f8f9fa;
+      border-bottom: 3px solid #0066cc;
+    }
+
+    .tutorial-header h1 {
+      margin: 0 0 10px 0;
+      font-size: 32px;
+      color: #333;
+    }
+
+    .tutorial-header p {
+      margin: 0;
+      font-size: 16px;
+      color: #666;
+    }
+
+    .tutorial-section {
+      margin-bottom: 50px;
+      padding: 30px;
+      background: #f9f9f9;
+      border-radius: 8px;
+      border-right: 4px solid #667eea;
+    }
+
+    .tutorial-section h2 {
+      color: #667eea;
+      margin-top: 0;
+      margin-bottom: 20px;
+      font-size: 24px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .tutorial-section h3 {
+      color: #333;
+      margin-top: 25px;
+      margin-bottom: 15px;
+      font-size: 18px;
+    }
+
+    .step-number {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 30px;
+      height: 30px;
+      background: #667eea;
+      color: white;
+      border-radius: 50%;
+      font-weight: bold;
+      font-size: 16px;
+    }
+
+    .screenshot {
+      margin: 20px 0;
+      text-align: center;
+    }
+
+    .screenshot img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .screenshot-caption {
+      display: block;
+      margin-top: 10px;
+      color: #666;
+      font-size: 14px;
+      font-style: italic;
+    }
+
+    .feature-box {
+      background: white;
+      padding: 20px;
+      margin: 15px 0;
+      border-radius: 8px;
+      border: 1px solid #e0e0e0;
+    }
+
+    .feature-box h4 {
+      margin-top: 0;
+      color: #667eea;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .feature-icon {
+      font-size: 24px;
+    }
+
+    .instruction-list {
+      list-style: none;
+      padding: 0;
+      counter-reset: step-counter;
+    }
+
+    .instruction-list li {
+      counter-increment: step-counter;
+      margin-bottom: 20px;
+      padding-right: 40px;
+      position: relative;
+    }
+
+    .instruction-list li::before {
+      content: counter(step-counter);
+      position: absolute;
+      right: 0;
+      top: 0;
+      width: 28px;
+      height: 28px;
+      background: #667eea;
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 14px;
+    }
+
+    .tip-box {
+      background: #fff3cd;
+      border-right: 4px solid #ffc107;
+      padding: 15px 20px;
+      margin: 20px 0;
+      border-radius: 4px;
+    }
+
+    .tip-box strong {
+      color: #856404;
+    }
+
+    .button-example {
+      display: inline-block;
+      padding: 8px 16px;
+      background: #667eea;
+      color: white;
+      border-radius: 4px;
+      text-decoration: none;
+      font-weight: bold;
+      margin: 5px;
+    }
+
+    .button-example.secondary {
+      background: #28a745;
+    }
+
+    .button-example.tertiary {
+      background: #dc3545;
+    }
+
+    .back-link {
+      display: inline-block;
+      margin: 30px 0;
+      padding: 12px 24px;
+      background: #667eea;
+      color: white;
+      text-decoration: none;
+      border-radius: 6px;
+      font-weight: bold;
+      transition: background 0.3s;
+    }
+
+    .back-link:hover {
+      background: #5568d3;
+    }
+
+    .video-feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin: 20px 0;
+    }
+
+    .troubleshooting-item {
+      background: white;
+      padding: 15px;
+      margin: 15px 0;
+      border-radius: 6px;
+      border-right: 3px solid #dc3545;
+    }
+
+    .troubleshooting-item h4 {
+      color: #dc3545;
+      margin-top: 0;
+    }
+
+    code {
+      background: #f4f4f4;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-family: monospace;
+      color: #d63384;
+    }
+
+    .warning-box {
+      background: #fff3cd;
+      border: 2px solid #ffc107;
+      border-right: 5px solid #dc3545;
+      padding: 20px;
+      margin: 20px 0;
+      border-radius: 6px;
+    }
+
+    .warning-box strong {
+      color: #dc3545;
+      font-size: 18px;
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    .warning-box p {
+      color: #856404;
+      margin: 5px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="tutorial-container">
+    <div class="tutorial-header">
+      <h1>מדריך שימוש</h1>
+      <p>כל מה שצריך לדעת כדי להתחיל להשתמש בתוסף לארכיון וידאו טניס שולחן</p>
+    </div>
+
+    <!-- Important Warning -->
+    <div class="warning-box">
+      <strong>⚠️ אזהרה חשובה!</strong>
+      <p><strong>אסור להוסיף סרטונים של שחקנים אחרים ללא אישורם!</strong></p>
+      <p>מותר להוסיף רק סרטונים של משחקים שבהם אתם השחקן הראשי .</p>
+      <p>הוספת סרטונים של שחקנים אחרים ללא אישורם תגרום לחסימת המשתמש מהמערכת!</p>
+    </div>
+
+    <!-- Installation Section -->
+    <div class="tutorial-section">
+      <h2><span class="step-number">1</span> התקנה והתחברות</h2>
+
+      <h3>התקנת התוסף</h3>
+      <p>התוסף זמין להורדה ב-Chrome Web Store. לחצו על הקישור "תוסף Chrome" בראש הדף והוסיפו אותו לדפדפן שלכם.</p>
+
+      <div class="screenshot">
+        <img src="img1.png" alt="דף Chrome Web Store עם התוסף">
+        <span class="screenshot-caption">דף Chrome Web Store עם התוסף ומוכן להתקנה</span>
+      </div>
+
+      <h3>הרשמה והתחברות למערכת</h3>
+      <p>לאחר התקנת התוסף, תצטרכו להירשם ולהתחבר כדי להוסיף וידאו.</p>
+
+      <h4>משתמש חדש - הרשמה</h4>
+      <ol class="instruction-list">
+        <li>
+          היכנסו לדף שחקן באתר TTTM (כתובת המתחילה ב-<code>/p/</code>)
+        </li>
+        <li>
+          לחצו על כפתור "➕ הוסף" ליד אחד המשחקים
+        </li>
+        <li>
+          חלון קופץ ייפתח עם טופס התחברות
+        </li>
+        <li>
+          לחצו על הקישור "הירשם" (מתחת לכפתור התחברות)
+        </li>
+        <li>
+          מלאו את הפרטים:
+          <ul>
+            <li>כתובת אימייל</li>
+            <li>סיסמה (לפחות 6 תווים)</li>
+            <li>אימות סיסמה (הזינו את אותה סיסמה שוב)</li>
+          </ul>
+        </li>
+        <li>
+          סמנו את תיבת האישור "אני מסכים/ה לתנאי השימוש ומדיניות הפרטיות"
+        </li>
+        <li>
+          לחצו על כפתור "הירשם"
+        </li>
+      </ol>
+
+      <h4>משתמש קיים - התחברות</h4>
+      <ol class="instruction-list">
+        <li>
+          פתחו את חלון התוסף (לחצו על "➕ הוסף" ליד משחק)
+        </li>
+        <li>
+          הזינו את האימייל והסיסמה שלכם
+        </li>
+        <li>
+          לחצו על כפתור "התחבר"
+        </li>
+      </ol>
+
+      <div class="screenshot">
+        <img src="img2.png" alt="טופס הרשמה והתחברות">
+        <span class="screenshot-caption">טופס ההרשמה וההתחברות עם שדות אימייל וסיסמה</span>
+      </div>
+
+      <h3>אישור מנהל המערכת</h3>
+      <p><strong>חשוב לדעת:</strong> לאחר ההרשמה הראשונה, מנהל המערכת צריך לאשר את המשתמש שלכם.</p>
+      <ul>
+        <li>ההרשמה הראשונה תשלח בקשת אישור למנהל המערכת</li>
+        <li>עד לאישור, לא תוכלו להוסיף סרטונים</li>
+        <li>לאחר האישור, תוכלו להתחיל להשתמש בתוסף</li>
+        <li>תהליך האישור עשוי לקחת עד 24 שעות</li>
+      </ul>
+
+      <div class="screenshot">
+        <img src="img3.png" alt="הודעת אישור מנהל">
+        <span class="screenshot-caption">הודעה על המתנה לאישור מנהל / הודעה שהמשתמש אושר</span>
+      </div>
+
+      <div class="tip-box">
+        <strong>💡 טיפ:</strong> לאחר האישור, התוסף יזכור אותכם ולא תצטרכו להתחבר שוב.
+      </div>
+    </div>
+
+    <!-- Homepage Features Section -->
+    <div class="tutorial-section">
+      <h2><span class="step-number">2</span> שימוש בעמוד הבית של TTTM</h2>
+
+      <p>התוסף משדרג את עמוד הבית של אתר TTTM ומציג את משחקי היום בצורה נוחה ומסודרת.</p>
+
+      <div class="feature-box">
+        <h4><span class="feature-icon">📅</span> צפייה במשחקי היום</h4>
+        <p>התוסף מציג אוטומטית את כל המשחקים המתוכננים להיום, מקובצים לפי סוג אירוע (ליגת על, לאומית, ארצית וכו').</p>
+
+        <div class="screenshot">
+          <img src="img4.png" alt="עמוד הבית של TTTM עם משחקי היום">
+          <span class="screenshot-caption">עמוד הבית של TTTM עם רשימת משחקי היום מוצגת, כולל קבוצות מתקפלות לפי סוג אירוע</span>
+        </div>
+      </div>
+
+      <div class="feature-box">
+        <h4><span class="feature-icon">🔍</span> חיפוש וסינון קבוצות</h4>
+        <p>ניתן לחפש קבוצות ספציפיות ולהדגיש אותן ברשימת המשחקים.</p>
+
+        <h3>איך משתמשים בחיפוש?</h3>
+        <ol class="instruction-list">
+          <li>
+            הקלידו שם קבוצה בשדה החיפוש בחלק העליון של רשימת המשחקים
+          </li>
+          <li>
+            התוסף יסנן וידגיש רק משחקים הכוללים את הקבוצה שחיפשתם
+          </li>
+          <li>
+            ניתן לחפש מספר קבוצות בו-זמנית על ידי הפרדה בפסיקים<br>
+            לדוגמה: <code>מכבי חיפה, הפועל תל אביב, בית"ר</code>
+          </li>
+          <li>
+            לחצו על כפתור "נקה" כדי למחוק את החיפוש ולראות את כל המשחקים
+          </li>
+        </ol>
+
+        <div class="screenshot">
+          <img src="img5.png" alt="חיפוש קבוצות עם הדגשה">
+          <span class="screenshot-caption">שדה החיפוש עם דוגמה של חיפוש קבוצה, והמשחקים המסוננים מודגשים בצהוב</span>
+        </div>
+      </div>
+
+      <div class="feature-box">
+        <h4><span class="feature-icon">📁</span> קיבוץ לפי אירועים</h4>
+        <p>המשחקים מקובצים לפי סוג אירוע. ניתן לקפל ולפתוח כל קבוצה על ידי לחיצה על כותרת האירוע.</p>
+
+        <div class="screenshot">
+          <img src="img6.png" alt="קבוצות משחקים מקופלות ומורחבות">
+          <span class="screenshot-caption">דוגמה לקבוצת משחקים מקופלת ומורחבת, עם החץ המסתובב</span>
+        </div>
+      </div>
+
+      <div class="tip-box">
+        <strong>💡 טיפ:</strong> החיפוש שלכם נשמר אוטומטית! אם תחזרו לעמוד מאוחר יותר, הסינון יישאר כפי שהגדרתם.
+      </div>
+    </div>
+
+    <!-- Player Page Features Section -->
+    <div class="tutorial-section">
+      <h2><span class="step-number">3</span> שימוש בדף שחקן</h2>
+
+      <p>התוסף מוסיף עמודת "וידאו" לטבלת המשחקים של כל שחקן, המאפשרת לצפות בסרטוני משחקים קיימים או להוסיף חדשים.</p>
+
+      <div class="video-feature-grid">
+        <div class="feature-box">
+          <h4><span class="feature-icon">▶️</span> צפייה בוידאו קיים</h4>
+          <p>אם למשחק כבר קיים וידאו, יופיע כפתור "▶️ צפה".</p>
+          <p>לחיצה על הכפתור תפתח את הוידאו בחלון חדש.</p>
+        </div>
+
+        <div class="feature-box">
+          <h4><span class="feature-icon">➕</span> הוספת וידאו חדש</h4>
+          <p>אם למשחק אין וידאו, יופיע כפתור "➕ הוסף".</p>
+          <p>לחיצה על הכפתור תפתח חלון להוספת קישור לוידאו.</p>
+        </div>
+      </div>
+
+      <div class="screenshot">
+        <img src="img7.png" alt="טבלת משחקים עם עמודת וידאו">
+        <span class="screenshot-caption">טבלת משחקים של שחקן עם עמודת "וידאו" חדשה, המציגה גם כפתורי "צפה" וגם כפתורי "הוסף"</span>
+      </div>
+
+      <h3>איך מוסיפים וידאו למשחק?</h3>
+      <ol class="instruction-list">
+        <li>
+          היכנסו לדף השחקן באתר TTTM (כתובת המתחילה ב-<code>/p/</code>)
+        </li>
+        <li>
+          מצאו את המשחק הרצוי בטבלת המשחקים
+        </li>
+        <li>
+          לחצו על כפתור "➕ הוסף" בעמודת הוידאו
+        </li>
+        <li>
+          חלון קופץ ייפתח עם פרטי המשחק
+        </li>
+        <li>
+          הדביקו את קישור YouTube לוידאו של המשחק
+        </li>
+        <li>
+          לחצו על "שמור" להוספת הוידאו לארכיון
+        </li>
+      </ol>
+
+      <div class="screenshot">
+        <img src="img8.png" alt="חלון הוספת וידאו">
+        <span class="screenshot-caption">חלון הוספת וידאו (popup) עם השדות המולאים - פרטי משחק וקישור YouTube</span>
+      </div>
+
+    </div>
+
+    <!-- Main Archive Site Section -->
+    <div class="tutorial-section">
+      <h2><span class="step-number">4</span> שימוש באתר הארכיון הראשי</h2>
+
+      <p>לאחר הוספת וידאו דרך התוסף, הוא יופיע באתר הארכיון הראשי עם כלי סינון מתקדמים.</p>
+
+      <div class="feature-box">
+        <h4><span class="feature-icon">🎯</span> סינון לפי שחקנים, מועדונים ואירועים</h4>
+        <p>השתמשו בלוחות הצד (שמאל וימין) כדי לסנן וידאו לפי:</p>
+        <ul>
+          <li><strong>שחקנים:</strong> חפשו לפי שם שחקן או לחצו על שחקן ברשימה</li>
+          <li><strong>מועדונים:</strong> סננו לפי קבוצה ספציפית</li>
+          <li><strong>אירועים:</strong> בחרו סוג תחרות (ליגת על, לאומית, ארצית)</li>
+          <li><strong>תאריכים:</strong> בחרו טווח זמן (היום, אתמול, שבוע, חודש, שנה)</li>
+        </ul>
+
+        <div class="screenshot">
+          <img src="img9.png" alt="אתר הארכיון הראשי עם סינונים">
+          <span class="screenshot-caption">אתר הארכיון הראשי עם הלוחות הצדדיים והסינונים המסומנים</span>
+        </div>
+      </div>
+
+      <div class="feature-box">
+        <h4><span class="feature-icon">🔎</span> חיפוש שחקנים</h4>
+        <p>השתמשו בשדה החיפוש בלוח השחקנים כדי למצוא שחקן ספציפי במהירות.</p>
+      </div>
+
+      <div class="feature-box">
+        <h4><span class="feature-icon">✅</span> סימון וידאו כנצפה</h4>
+        <p>לחצו על כפתור "צפה בסרטון" - הוידאו יסומן אוטומטית כנצפה (עם סימון V ירוק).</p>
+      </div>
+    </div>
+
+    <!-- Troubleshooting Section -->
+    <div class="tutorial-section">
+      <h2>❓ פתרון בעיות נפוצות</h2>
+
+      <div class="troubleshooting-item">
+        <h4>התוסף לא עובד באתר TTTM</h4>
+        <p><strong>פתרון:</strong></p>
+        <ul>
+          <li>ודאו שהתוסף מותקן ומופעל בדף <code>chrome://extensions</code></li>
+          <li>רעננו את הדף (F5 או Ctrl+R)</li>
+          <li>נסו לסגור ולפתוח מחדש את הדפדפן</li>
+          <li>ודאו שאתם באתר <code>www.tttm.co.il</code> (התוסף עובד רק באתר זה)</li>
+        </ul>
+      </div>
+
+      <div class="troubleshooting-item">
+        <h4>לא רואה את עמודת הוידאו בדף שחקן</h4>
+        <p><strong>פתרון:</strong></p>
+        <ul>
+          <li>ודאו שאתם בדף שחקן (כתובת URL מכילה <code>/p/</code> ואחריו מספר)</li>
+          <li>המתינו כמה שניות לטעינת הדף המלאה</li>
+          <li>רעננו את הדף</li>
+        </ul>
+      </div>
+
+      <div class="troubleshooting-item">
+        <h4>לחצתי על "הוסף וידאו" ושום דבר לא קורה</h4>
+        <p><strong>פתרון:</strong></p>
+        <ul>
+          <li>פתחו את Console (F12 ← Console) וחפשו הודעות שגיאה</li>
+          <li>הסירו את התוסף והתקינו אותו מחדש</li>
+          <li>ודאו שאתם משתמשים בגרסה עדכנית של Chrome</li>
+        </ul>
+      </div>
+
+      <div class="troubleshooting-item">
+        <h4>הוידאו לא מופיע באתר הארכיון לאחר ההוספה</h4>
+        <p><strong>פתרון:</strong></p>
+        <ul>
+          <li>המתינו כמה דקות - לפעמים לוקח זמן לעדכון</li>
+          <li>רעננו את דף הארכיון</li>
+          <li>נקו את Cache של הדפדפן (Ctrl+Shift+Delete)</li>
+          <li>ודאו שהקישור ל-YouTube תקין</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Tips Section -->
+    <div class="tutorial-section">
+      <h2>💡 טיפים ושיטות עבודה מומלצות</h2>
+
+      <div class="feature-box">
+        <h4>✅ הוספת וידאו איכותית</h4>
+        <ul>
+          <li>ודאו שקישור YouTube פעיל ונגיש</li>
+          <li>בדקו שהוידאו אכן מתאים למשחק לפני השמירה</li>
+          <li>השתמשו בקישורים מלאים מ-YouTube (https://www.youtube.com/watch?v=...)</li>
+        </ul>
+      </div>
+
+      <div class="feature-box">
+        <h4>🔎 חיפוש יעיל באתר הארכיון</h4>
+        <ul>
+          <li>השתמשו במספר סינונים יחד למציאה מדויקת</li>
+          <li>החיפוש בשחקנים תומך בחיפוש חלקי (אפשר להקליד רק חלק מהשם)</li>
+          <li>סנן לפי תאריך כדי למצוא משחקים אחרונים</li>
+        </ul>
+      </div>
+
+      <div class="feature-box">
+        <h4>📊 מעקב אחר שחקנים/קבוצות מועדפים</h4>
+        <ul>
+          <li>השתמשו בשדה החיפוש במשחקי היום כדי לעקוב אחר הקבוצות שלכם</li>
+          <li>החיפוש נשמר - פעם אחת מספיק להגדיר ואתם תמיד תראו את הקבוצות שלכם</li>
+          <li>באתר הארכיון, לחצו על שחקן או קבוצה בצד - הסינון יישאר פעיל</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Back Button -->
+    <a href="../index.html" class="back-link">← חזרה לאתר הארכיון</a>
+
+    <div style="text-align: center; padding: 40px 20px; color: #999; border-top: 1px solid #e0e0e0; margin-top: 50px;">
+      <p>יש שאלות נוספות? צרו קשר או פתחו issue ב-GitHub</p>
+      <p style="font-size: 14px;">© 2025 ארכיון וידאו טניס שולחן</p>
+    </div>
+  </div>
+</body>
+</html>
