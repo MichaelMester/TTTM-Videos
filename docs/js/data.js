@@ -30,16 +30,18 @@ const Data = {
   },
 
   /**
-   * Extract unique players with their clubs and video counts
+   * Extract unique players with their clubs, video counts, and event type
    */
   extractPlayers(videos) {
     const playerMap = new Map();
 
     videos.forEach(video => {
+      const eventType = window.Utils.getEventType(video.event);
+
       // Process current player
       if (video.currentPlayer) {
         if (!playerMap.has(video.currentPlayer)) {
-          playerMap.set(video.currentPlayer, { count: 0, clubs: new Map() });
+          playerMap.set(video.currentPlayer, { count: 0, clubs: new Map(), eventType: null });
         }
         const playerData = playerMap.get(video.currentPlayer);
         playerData.count++;
@@ -48,12 +50,21 @@ const Data = {
           const clubCount = playerData.clubs.get(video.currentPlayerClub) || 0;
           playerData.clubs.set(video.currentPlayerClub, clubCount + 1);
         }
+
+        // Keep the highest priority event type
+        if (eventType) {
+          const currentPriority = window.Utils.getEventTypePriority(playerData.eventType);
+          const newPriority = window.Utils.getEventTypePriority(eventType);
+          if (newPriority > currentPriority) {
+            playerData.eventType = eventType;
+          }
+        }
       }
 
       // Process opponent player
       if (video.opponentPlayer) {
         if (!playerMap.has(video.opponentPlayer)) {
-          playerMap.set(video.opponentPlayer, { count: 0, clubs: new Map() });
+          playerMap.set(video.opponentPlayer, { count: 0, clubs: new Map(), eventType: null });
         }
         const playerData = playerMap.get(video.opponentPlayer);
         playerData.count++;
@@ -61,6 +72,15 @@ const Data = {
         if (video.opponentClub) {
           const clubCount = playerData.clubs.get(video.opponentClub) || 0;
           playerData.clubs.set(video.opponentClub, clubCount + 1);
+        }
+
+        // Keep the highest priority event type
+        if (eventType) {
+          const currentPriority = window.Utils.getEventTypePriority(playerData.eventType);
+          const newPriority = window.Utils.getEventTypePriority(eventType);
+          if (newPriority > currentPriority) {
+            playerData.eventType = eventType;
+          }
         }
       }
     });
@@ -81,32 +101,80 @@ const Data = {
         return {
           name,
           count: data.count,
-          club: mostCommonClub
+          club: mostCommonClub,
+          eventType: data.eventType
         };
       })
-      .sort((a, b) => b.count - a.count);
+      .sort((a, b) => {
+        // Sort by event type first, then by count
+        const aPriority = window.Utils.getEventTypePriority(a.eventType);
+        const bPriority = window.Utils.getEventTypePriority(b.eventType);
+        if (aPriority !== bPriority) {
+          return bPriority - aPriority; // Higher priority first
+        }
+        return b.count - a.count; // Then by count
+      });
   },
 
   /**
-   * Extract unique clubs with video counts
+   * Extract unique clubs with video counts and event type
    */
   extractClubs(videos) {
     const clubMap = new Map();
 
     videos.forEach(video => {
+      const eventType = window.Utils.getEventType(video.event);
+
       if (video.currentPlayerClub) {
-        const count = clubMap.get(video.currentPlayerClub) || 0;
-        clubMap.set(video.currentPlayerClub, count + 1);
+        if (!clubMap.has(video.currentPlayerClub)) {
+          clubMap.set(video.currentPlayerClub, { count: 0, eventType: null });
+        }
+        const clubData = clubMap.get(video.currentPlayerClub);
+        clubData.count++;
+
+        // Keep the highest priority event type
+        if (eventType) {
+          const currentPriority = window.Utils.getEventTypePriority(clubData.eventType);
+          const newPriority = window.Utils.getEventTypePriority(eventType);
+          if (newPriority > currentPriority) {
+            clubData.eventType = eventType;
+          }
+        }
       }
+
       if (video.opponentClub) {
-        const count = clubMap.get(video.opponentClub) || 0;
-        clubMap.set(video.opponentClub, count + 1);
+        if (!clubMap.has(video.opponentClub)) {
+          clubMap.set(video.opponentClub, { count: 0, eventType: null });
+        }
+        const clubData = clubMap.get(video.opponentClub);
+        clubData.count++;
+
+        // Keep the highest priority event type
+        if (eventType) {
+          const currentPriority = window.Utils.getEventTypePriority(clubData.eventType);
+          const newPriority = window.Utils.getEventTypePriority(eventType);
+          if (newPriority > currentPriority) {
+            clubData.eventType = eventType;
+          }
+        }
       }
     });
 
     return Array.from(clubMap.entries())
-      .map(([name, count]) => ({ name, count }))
-      .sort((a, b) => b.count - a.count);
+      .map(([name, data]) => ({
+        name,
+        count: data.count,
+        eventType: data.eventType
+      }))
+      .sort((a, b) => {
+        // Sort by event type first, then by count
+        const aPriority = window.Utils.getEventTypePriority(a.eventType);
+        const bPriority = window.Utils.getEventTypePriority(b.eventType);
+        if (aPriority !== bPriority) {
+          return bPriority - aPriority; // Higher priority first
+        }
+        return b.count - a.count; // Then by count
+      });
   },
 
   /**

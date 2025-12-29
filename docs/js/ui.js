@@ -148,7 +148,7 @@ const UI = {
   },
 
   /**
-   * Render player list
+   * Render player list grouped by event type
    */
   renderPlayerList(videos) {
     const players = window.Data.extractPlayers(videos);
@@ -162,19 +162,46 @@ const UI = {
       return;
     }
 
-    let html = '';
-    filteredPlayers.forEach(player => {
-      const isActive = window.Filters.state.players.has(player.name);
-      const playerDisplay = player.club
-        ? `${window.Utils.escapeHtml(player.name)} <span class="player-club-info">(${window.Utils.escapeHtml(player.club)})</span>`
-        : window.Utils.escapeHtml(player.name);
+    // Group players by event type
+    const grouped = {
+      'על': [],
+      'לאומית': [],
+      'ארצית': [],
+      'other': []
+    };
 
-      html += `
-        <div class="list-item ${isActive ? 'active' : ''}" data-filter-type="players" data-filter-value="${window.Utils.escapeHtml(player.name)}">
-          <span>${playerDisplay}</span>
-          <span class="item-count">${player.count}</span>
-        </div>
-      `;
+    filteredPlayers.forEach(player => {
+      if (player.eventType && grouped[player.eventType]) {
+        grouped[player.eventType].push(player);
+      } else {
+        grouped.other.push(player);
+      }
+    });
+
+    let html = '';
+    const eventTypes = ['על', 'לאומית', 'ארצית', 'other'];
+
+    eventTypes.forEach(eventType => {
+      if (grouped[eventType].length > 0) {
+        // Add header for this event type
+        const headerLabel = eventType === 'other' ? 'אחר' : eventType;
+        html += `<div style="font-size: 13px; font-weight: bold; color: #0066cc; margin-top: 12px; margin-bottom: 8px; padding-bottom: 4px; border-bottom: 1px solid #e0e0e0;">${headerLabel}</div>`;
+
+        // Add players for this event type
+        grouped[eventType].forEach(player => {
+          const isActive = window.Filters.state.players.has(player.name);
+          const playerDisplay = player.club
+            ? `${window.Utils.escapeHtml(player.name)} <span class="player-club-info">(${window.Utils.escapeHtml(player.club)})</span>`
+            : window.Utils.escapeHtml(player.name);
+
+          html += `
+            <div class="list-item ${isActive ? 'active' : ''}" data-filter-type="players" data-filter-value="${window.Utils.escapeHtml(player.name)}">
+              <span>${playerDisplay}</span>
+              <span class="item-count">${player.count}</span>
+            </div>
+          `;
+        });
+      }
     });
 
     container.innerHTML = html;
@@ -190,7 +217,7 @@ const UI = {
   },
 
   /**
-   * Render club list
+   * Render club list grouped by event type
    */
   renderClubList(videos) {
     const clubs = window.Data.extractClubs(videos);
@@ -201,15 +228,43 @@ const UI = {
       return;
     }
 
-    let html = '';
+    // Group clubs by event type
+    const grouped = {
+      'על': [],
+      'לאומית': [],
+      'ארצית': [],
+      'other': []
+    };
+
     clubs.forEach(club => {
-      const isActive = window.Filters.state.clubs.has(club.name);
-      html += `
-        <div class="list-item ${isActive ? 'active' : ''}" data-filter-type="clubs" data-filter-value="${window.Utils.escapeHtml(club.name)}">
-          <span style="word-break: break-word;">${window.Utils.escapeHtml(club.name)}</span>
-          <span class="item-count">${club.count}</span>
-        </div>
-      `;
+      if (club.eventType && grouped[club.eventType]) {
+        grouped[club.eventType].push(club);
+      } else {
+        grouped.other.push(club);
+      }
+    });
+
+    let html = '';
+
+    // Render each group with header
+    const eventTypes = ['על', 'לאומית', 'ארצית', 'other'];
+    eventTypes.forEach(eventType => {
+      if (grouped[eventType].length > 0) {
+        // Add header
+        const headerLabel = eventType === 'other' ? 'אחר' : eventType;
+        html += `<div style="font-size: 13px; font-weight: bold; color: #0066cc; margin-top: 12px; margin-bottom: 8px; padding-bottom: 4px; border-bottom: 1px solid #e0e0e0;">${headerLabel}</div>`;
+
+        // Add clubs in this group
+        grouped[eventType].forEach(club => {
+          const isActive = window.Filters.state.clubs.has(club.name);
+          html += `
+            <div class="list-item ${isActive ? 'active' : ''}" data-filter-type="clubs" data-filter-value="${window.Utils.escapeHtml(club.name)}">
+              <span style="word-break: break-word;">${window.Utils.escapeHtml(club.name)}</span>
+              <span class="item-count">${club.count}</span>
+            </div>
+          `;
+        });
+      }
     });
 
     container.innerHTML = html;

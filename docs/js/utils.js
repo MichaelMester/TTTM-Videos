@@ -70,6 +70,32 @@ const Utils = {
   },
 
   /**
+   * Determine event type from event name
+   * Returns: 'על', 'לאומית', 'ארצית', or null
+   */
+  getEventType(eventName) {
+    if (!eventName) return null;
+
+    if (eventName.includes('על')) return 'על';
+    if (eventName.includes('לאומית')) return 'לאומית';
+    if (eventName.includes('ארצית')) return 'ארצית';
+
+    return null;
+  },
+
+  /**
+   * Get priority for event type (higher = more important)
+   */
+  getEventTypePriority(eventType) {
+    const priorities = {
+      'על': 3,
+      'לאומית': 2,
+      'ארצית': 1
+    };
+    return priorities[eventType] || 0;
+  },
+
+  /**
    * Get date badge info for a video
    */
   getDateBadge(video) {
