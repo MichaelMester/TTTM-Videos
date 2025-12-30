@@ -51,10 +51,14 @@ const UI = {
     const groupedVideos = window.Data.groupVideosByEvent(videos);
     let html = '';
 
-    // Custom sort event names
-    const sortedEventNames = Object.keys(groupedVideos).sort((a, b) =>
-      window.Data.sortEvents(a, b)
-    );
+    // Sort event names by most recent video in each event
+    const sortedEventNames = Object.keys(groupedVideos).sort((a, b) => {
+      const aMostRecent = groupedVideos[a][0]; // Already sorted by date in groupVideosByEvent
+      const bMostRecent = groupedVideos[b][0];
+      const dateA = new Date(aMostRecent.updatedAt || aMostRecent.createdAt || 0);
+      const dateB = new Date(bMostRecent.updatedAt || bMostRecent.createdAt || 0);
+      return dateB - dateA; // Newest first
+    });
 
     sortedEventNames.forEach(eventName => {
       const eventVideos = groupedVideos[eventName];
@@ -188,9 +192,17 @@ const UI = {
 
     eventTypes.forEach(eventType => {
       if (grouped[eventType].length > 0) {
-        // Add header for this event type
+        // Add collapsible header for this event type
         const headerLabel = eventType === 'other' ? 'אחר' : eventType;
-        html += `<div style="font-size: 13px; font-weight: bold; color: #0066cc; margin-top: 12px; margin-bottom: 8px; padding-bottom: 4px; border-bottom: 1px solid #e0e0e0;">${headerLabel}</div>`;
+        const groupId = `player-group-${eventType}`;
+        html += `
+          <div class="filter-group" id="${groupId}" style="margin-top: 12px;">
+            <div class="filter-group-header" onclick="toggleFilterGroup('${groupId}')">
+              <span class="filter-collapse-icon">▼</span>
+              <span style="font-size: 13px; font-weight: bold; color: #0066cc;">${headerLabel}</span>
+            </div>
+            <div class="filter-group-content">
+        `;
 
         // Add players for this event type
         grouped[eventType].forEach(player => {
@@ -206,6 +218,11 @@ const UI = {
             </div>
           `;
         });
+
+        html += `
+            </div>
+          </div>
+        `;
       }
     });
 
@@ -251,13 +268,21 @@ const UI = {
 
     let html = '';
 
-    // Render each group with header
+    // Render each group with collapsible header
     const eventTypes = ['על', 'לאומית', 'ארצית', 'other'];
     eventTypes.forEach(eventType => {
       if (grouped[eventType].length > 0) {
-        // Add header
+        // Add collapsible header
         const headerLabel = eventType === 'other' ? 'אחר' : eventType;
-        html += `<div style="font-size: 13px; font-weight: bold; color: #0066cc; margin-top: 12px; margin-bottom: 8px; padding-bottom: 4px; border-bottom: 1px solid #e0e0e0;">${headerLabel}</div>`;
+        const groupId = `club-group-${eventType}`;
+        html += `
+          <div class="filter-group" id="${groupId}" style="margin-top: 12px;">
+            <div class="filter-group-header" onclick="toggleFilterGroup('${groupId}')">
+              <span class="filter-collapse-icon">▼</span>
+              <span style="font-size: 13px; font-weight: bold; color: #0066cc;">${headerLabel}</span>
+            </div>
+            <div class="filter-group-content">
+        `;
 
         // Add clubs in this group
         grouped[eventType].forEach(club => {
@@ -269,6 +294,11 @@ const UI = {
             </div>
           `;
         });
+
+        html += `
+            </div>
+          </div>
+        `;
       }
     });
 

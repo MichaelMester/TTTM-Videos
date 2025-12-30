@@ -11,6 +11,32 @@ function toggleEventGroup(eventId) {
   }
 }
 
+// Global function for filter group collapse (called from onclick)
+function toggleFilterGroup(groupId) {
+  const filterGroup = document.getElementById(groupId);
+  if (filterGroup) {
+    filterGroup.classList.toggle('collapsed');
+  }
+}
+
+// Global function to add site to favorites
+function addToFavorites() {
+  const pageTitle = document.title;
+  const pageUrl = window.location.href;
+
+  // Try different methods based on browser
+  if (window.sidebar && window.sidebar.addPanel) {
+    // Firefox
+    window.sidebar.addPanel(pageTitle, pageUrl, '');
+  } else if (window.external && ('AddFavorite' in window.external)) {
+    // IE
+    window.external.AddFavorite(pageUrl, pageTitle);
+  } else {
+    // Modern browsers - show instruction
+    alert('להוספת האתר למועדפים:\n\nChrome/Edge: לחץ Ctrl+D (Windows) או Cmd+D (Mac)\nFirefox: לחץ Ctrl+D (Windows) או Cmd+D (Mac)\nSafari: לחץ Cmd+D\n\nאו השתמש בכפתור הכוכב בסרגל הכתובות');
+  }
+}
+
 /**
  * Load and initialize the application
  */
