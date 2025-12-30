@@ -105,6 +105,7 @@ const UI = {
     const dateBadge = window.Utils.getDateBadge(video);
     const videoId = video.id || video.match;
     const isWatched = window.Storage.isWatched(videoId);
+    const isScoreRevealed = window.Storage.isScoreRevealed(videoId);
 
     // Check if fields match active filters for highlighting
     const isCurrentPlayerFiltered = window.Filters.state.players.has(video.currentPlayer);
@@ -131,7 +132,11 @@ const UI = {
               ${video.currentPlayerClub ? `<div class="club-name" data-filter-type="clubs" data-filter-value="${window.Utils.escapeHtml(video.currentPlayerClub)}">${isCurrentClubFiltered ? `<span class="filter-highlight">${window.Utils.escapeHtml(video.currentPlayerClub)}</span>` : window.Utils.escapeHtml(video.currentPlayerClub)}</div>` : ''}
             </div>
             <div class="vs-divider">
-              ${video.score ? `<a href="${matchUrl}" target="_blank" rel="noopener noreferrer" class="score-display" style="text-decoration: none; color: #0066cc; cursor: pointer;">${window.Utils.escapeHtml(video.score)}</a>` : '<div>VS</div>'}
+              ${video.score ? `
+                <div class="score-container" id="score-container-${videoId}">
+                  <a href="${matchUrl}" target="_blank" rel="noopener noreferrer" class="score-display ${!isWatched && !isScoreRevealed ? 'score-blurred' : 'score-revealed'}" id="score-${videoId}" style="text-decoration: none; color: #0066cc;" onclick="window.UI.handleScoreClick(event, '${videoId}')">${window.Utils.escapeHtml(video.score)}</a>
+                </div>
+              ` : '<div>VS</div>'}
             </div>
             <div class="player-info">
               ${video.opponentPlayer ? `<div class="player-name" data-filter-type="players" data-filter-value="${window.Utils.escapeHtml(video.opponentPlayer)}">${isOpponentPlayerFiltered ? `<span class="filter-highlight">${window.Utils.escapeHtml(video.opponentPlayer)}</span>` : window.Utils.escapeHtml(video.opponentPlayer)}</div>` : ''}
@@ -452,6 +457,27 @@ const UI = {
     const container = document.getElementById('errorContainer');
     container.innerHTML = `<div class="error">${window.Utils.escapeHtml(message)}</div>`;
     document.getElementById('loadingContainer').style.display = 'none';
+  },
+
+  /**
+   * Handle score click - reveal if blurred, otherwise allow link navigation
+   */
+  handleScoreClick(event, videoId) {
+    const scoreElement = document.getElementById(`score-${videoId}`);
+
+    if (scoreElement && scoreElement.classList.contains('score-blurred')) {
+      // Prevent navigation when revealing
+      event.preventDefault();
+      event.stopPropagation();
+
+      // Reveal the score
+      scoreElement.classList.remove('score-blurred');
+      scoreElement.classList.add('score-revealed');
+
+      // Save to cache
+      window.Storage.markScoreRevealed(videoId);
+    }
+    // If not blurred, allow normal link behavior
   }
 };
 
