@@ -173,8 +173,8 @@ const UI = {
 
     // Group players by event type
     const grouped = {
-      'על': [],
-      'לאומית': [],
+      'ליגת על': [],
+      'לאומית ליגה': [],
       'ארצית': [],
       'other': []
     };
@@ -188,7 +188,7 @@ const UI = {
     });
 
     let html = '';
-    const eventTypes = ['על', 'לאומית', 'ארצית', 'other'];
+    const eventTypes = ['ליגת על', 'לאומית ליגה', 'ארצית', 'other'];
 
     eventTypes.forEach(eventType => {
       if (grouped[eventType].length > 0) {
@@ -252,8 +252,8 @@ const UI = {
 
     // Group clubs by event type
     const grouped = {
-      'על': [],
-      'לאומית': [],
+      'ליגת על': [],
+      'לאומית ליגה': [],
       'ארצית': [],
       'other': []
     };
@@ -269,7 +269,7 @@ const UI = {
     let html = '';
 
     // Render each group with collapsible header
-    const eventTypes = ['על', 'לאומית', 'ארצית', 'other'];
+    const eventTypes = ['ליגת על', 'לאומית ליגה', 'ארצית', 'other'];
     eventTypes.forEach(eventType => {
       if (grouped[eventType].length > 0) {
         // Add collapsible header
