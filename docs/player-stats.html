@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, user-scalable=no">
+  <title>סטטיסטיקת שחקן - טנ"ש ישראלי</title>
+  <link rel="shortcut icon" href="https://www.tttm.co.il/favicon.ico">
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-H0GG11C76Z"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-H0GG11C76Z');
+  </script>
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <!-- External CSS -->
+  <link rel="stylesheet" href="css/styles.css">
+  <style>
+    .back-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      background: #0066cc;
+      color: white;
+      text-decoration: none;
+      border-radius: 4px;
+      font-size: 14px;
+      font-weight: bold;
+      transition: all 0.2s;
+      margin-bottom: 20px;
+    }
+
+    .back-button:hover {
+      background: #0052a3;
+      transform: translateY(-2px);
+    }
+
+    .player-header {
+      background: white;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      margin-bottom: 30px;
+      text-align: center;
+    }
+
+    .player-name-title {
+      font-size: 36px;
+      font-weight: bold;
+      color: #0066cc;
+      margin-bottom: 12px;
+    }
+
+    .player-club-title {
+      font-size: 18px;
+      color: #666;
+      margin-bottom: 8px;
+    }
+
+    .player-subtitle {
+      font-size: 14px;
+      color: #999;
+    }
+
+    .stats-overview {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .stat-box {
+      background: white;
+      padding: 24px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+
+    .stat-box-number {
+      font-size: 42px;
+      font-weight: bold;
+      color: #0066cc;
+      margin-bottom: 8px;
+    }
+
+    .stat-box-label {
+      font-size: 14px;
+      color: #666;
+      font-weight: 600;
+    }
+
+    .stat-box.win-rate {
+      background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+      color: white;
+    }
+
+    .stat-box.win-rate .stat-box-number,
+    .stat-box.win-rate .stat-box-label {
+      color: white;
+    }
+
+    .section-box {
+      background: white;
+      padding: 24px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+    }
+
+    .section-box-title {
+      font-size: 20px;
+      font-weight: bold;
+      color: #333;
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid #0066cc;
+    }
+
+    .performance-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 16px;
+      background: #f8f9fa;
+      border-radius: 4px;
+      margin-bottom: 8px;
+    }
+
+    .performance-row:hover {
+      background: #e3f2fd;
+    }
+
+    .performance-name {
+      font-weight: 600;
+      color: #333;
+      flex: 1;
+    }
+
+    .performance-stats {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      font-size: 13px;
+    }
+
+    .performance-count {
+      color: #666;
+    }
+
+    .performance-record {
+      color: #0066cc;
+      font-weight: bold;
+    }
+
+    .win-bar {
+      width: 100px;
+      height: 8px;
+      background: #e0e0e0;
+      border-radius: 4px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .win-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #28a745 0%, #20c997 100%);
+      transition: width 0.3s ease;
+    }
+
+    .recent-match {
+      padding: 16px;
+      background: #f8f9fa;
+      border-radius: 6px;
+      margin-bottom: 12px;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .recent-match:hover {
+      background: #e3f2fd;
+    }
+
+    .match-date-badge {
+      font-size: 12px;
+      color: #666;
+      font-weight: 600;
+    }
+
+    .match-info {
+      flex: 1;
+    }
+
+    .match-opponent {
+      font-weight: bold;
+      color: #333;
+      margin-bottom: 4px;
+    }
+
+    .match-event {
+      font-size: 12px;
+      color: #666;
+    }
+
+    .match-result {
+      font-size: 16px;
+      font-weight: bold;
+      padding: 8px 16px;
+      border-radius: 4px;
+      min-width: 80px;
+      text-align: center;
+    }
+
+    .match-result.win {
+      background: #28a745;
+      color: white;
+    }
+
+    .match-result.loss {
+      background: #dc3545;
+      color: white;
+    }
+
+    .match-result.unknown {
+      background: #6c757d;
+      color: white;
+    }
+
+    .no-data {
+      text-align: center;
+      padding: 40px;
+      color: #999;
+      font-size: 16px;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 60px 20px;
+      color: #0066cc;
+      font-size: 18px;
+    }
+
+    .opponent-link {
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+
+    .opponent-link:hover {
+      color: #0066cc;
+    }
+
+    .main-content {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+  </style>
+</head>
+
+<body dir="rtl">
+  <!-- Header -->
+  <div class="header">
+    <div class="header-content">
+      <h1>סטטיסטיקת שחקן</h1>
+      <p class="subtitle">נתונים מפורטים על משחקי השחקן</p>
+    </div>
+  </div>
+
+  <div class="main-content">
+    <a href="index.html" class="back-button">
+      <i class="fa-solid fa-arrow-right"></i>
+      <span>חזרה לדף הראשי</span>
+    </a>
+
+    <div id="loadingContainer" class="loading">טוען נתונים...</div>
+    <div id="errorContainer"></div>
+    <div id="statsContent" style="display: none;">
+      <!-- Player Header -->
+      <div class="player-header">
+        <div class="player-name-title" id="playerName"></div>
+        <div class="player-club-title" id="playerClub"></div>
+        <div class="player-subtitle" id="playerSubtitle"></div>
+      </div>
+
+      <!-- Stats Overview -->
+      <div class="stats-overview">
+        <div class="stat-box">
+          <div class="stat-box-number" id="totalMatches">0</div>
+          <div class="stat-box-label">סה"כ משחקים</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-box-number" id="totalWins">0</div>
+          <div class="stat-box-label">ניצחונות</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-box-number" id="totalLosses">0</div>
+          <div class="stat-box-label">הפסדים</div>
+        </div>
+        <div class="stat-box win-rate">
+          <div class="stat-box-number" id="winRate">0%</div>
+          <div class="stat-box-label">אחוז ניצחונות</div>
+        </div>
+      </div>
+
+      <!-- Performance by Event -->
+      <div class="section-box">
+        <div class="section-box-title">ביצועים לפי אירוע</div>
+        <div id="eventPerformance"></div>
+      </div>
+
+      <!-- Opponents Record -->
+      <div class="section-box">
+        <div class="section-box-title">מאזן מול יריבים</div>
+        <div id="opponentsRecord"></div>
+      </div>
+
+      <!-- Recent Matches -->
+      <div class="section-box">
+        <div class="section-box-title">משחקים אחרונים</div>
+        <div id="recentMatches"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- External JavaScript - Load in correct order -->
+  <script src="js/config.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/player-stats.js"></script>
+</body>
+</html>

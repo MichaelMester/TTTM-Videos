@@ -88,8 +88,18 @@ const UI = {
 
     container.innerHTML = html;
 
-    // Add event listeners for player names, club names, and event tags
-    container.querySelectorAll('.player-name, .club-name, .event-tag').forEach(element => {
+    // Add event listeners for player names - show menu
+    container.querySelectorAll('.player-name').forEach(element => {
+      element.addEventListener('click', function(event) {
+        const value = this.getAttribute('data-filter-value');
+        if (value) {
+          window.UI.showPlayerMenu(event, value);
+        }
+      });
+    });
+
+    // Add event listeners for club names and event tags
+    container.querySelectorAll('.club-name, .event-tag').forEach(element => {
       element.addEventListener('click', function() {
         const type = this.getAttribute('data-filter-type');
         const value = this.getAttribute('data-filter-value');
@@ -231,10 +241,14 @@ const UI = {
 
     // Add event listeners
     container.querySelectorAll('.list-item').forEach(item => {
-      item.addEventListener('click', function() {
+      item.addEventListener('click', function(event) {
         const type = this.getAttribute('data-filter-type');
         const value = this.getAttribute('data-filter-value');
-        window.Filters.addFilter(type, value);
+        if (type === 'players') {
+          window.UI.showPlayerMenu(event, value);
+        } else {
+          window.Filters.addFilter(type, value);
+        }
       });
     });
   },
@@ -510,6 +524,66 @@ const UI = {
       window.Storage.markScoreRevealed(videoId);
     }
     // If not blurred, allow normal link behavior
+  },
+
+  /**
+   * Show player context menu
+   */
+  showPlayerMenu(event, playerName) {
+    event.preventDefault();
+    event.stopPropagation();
+
+    // Remove any existing menu
+    const existingMenu = document.querySelector('.player-context-menu');
+    if (existingMenu) {
+      existingMenu.remove();
+    }
+
+    // Create menu
+    const menu = document.createElement('div');
+    menu.className = 'player-context-menu';
+    menu.innerHTML = `
+      <div class="player-menu-item" data-action="filter">
+        <i class="fa-solid fa-filter"></i>
+        <span>סינון לפי שחקן</span>
+      </div>
+      <div class="player-menu-item" data-action="stats">
+        <i class="fa-solid fa-chart-simple"></i>
+        <span>סטטיסטיקה של השחקן</span>
+      </div>
+    `;
+
+    // Position menu near click
+    document.body.appendChild(menu);
+    const rect = event.target.getBoundingClientRect();
+    menu.style.top = `${rect.bottom + window.scrollY + 5}px`;
+    menu.style.left = `${rect.left + window.scrollX}px`;
+
+    // Add event listeners to menu items
+    menu.querySelectorAll('.player-menu-item').forEach(item => {
+      item.addEventListener('click', function(e) {
+        e.stopPropagation();
+        const action = this.getAttribute('data-action');
+
+        if (action === 'filter') {
+          window.Filters.addFilter('players', playerName);
+        } else if (action === 'stats') {
+          // Navigate to player stats page
+          window.location.href = `player-stats.html?player=${encodeURIComponent(playerName)}`;
+        }
+
+        menu.remove();
+      });
+    });
+
+    // Close menu when clicking outside
+    const closeMenu = (e) => {
+      if (!menu.contains(e.target)) {
+        menu.remove();
+        document.removeEventListener('click', closeMenu);
+      }
+    };
+    setTimeout(() => document.addEventListener('click', closeMenu), 0);
   }
 };
 
