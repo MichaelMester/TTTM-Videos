@@ -142,8 +142,9 @@ const UI = {
         <div class="video-card-content">
           <div class="match-details">
             <div class="player-info">
-              ${video.currentPlayer ? `<div class="player-name" data-filter-type="players" data-filter-value="${window.Utils.escapeHtml(video.currentPlayer)}">${isCurrentPlayerFiltered ? `<span class="filter-highlight">${window.Utils.escapeHtml(video.currentPlayer)}</span>` : window.Utils.escapeHtml(video.currentPlayer)}</div>` : ''}
+              ${video.currentPlayer ? `<div class="player-name" data-filter-type="players" data-filter-value="${window.Utils.escapeHtml(video.currentPlayer)}" data-player-id="${video.currentPlayerId || ''}">${isCurrentPlayerFiltered ? `<span class="filter-highlight">${window.Utils.escapeHtml(video.currentPlayer)}</span>` : window.Utils.escapeHtml(video.currentPlayer)}</div>` : ''}
               ${video.currentPlayerClub ? `<div class="club-name" data-filter-type="clubs" data-filter-value="${window.Utils.escapeHtml(video.currentPlayerClub)}">${isCurrentClubFiltered ? `<span class="filter-highlight">${window.Utils.escapeHtml(video.currentPlayerClub)}</span>` : window.Utils.escapeHtml(video.currentPlayerClub)}</div>` : ''}
+              ${video.currentPlayerRanking ? `<div style="font-size: 11px; color: #666; margin-top: 2px;">דירוג: ${window.Utils.escapeHtml(video.currentPlayerRanking)}</div>` : ''}
             </div>
             <div class="vs-divider">
               ${video.score ? `
@@ -153,8 +154,9 @@ const UI = {
               ` : '<div>VS</div>'}
             </div>
             <div class="player-info">
-              ${video.opponentPlayer ? `<div class="player-name" data-filter-type="players" data-filter-value="${window.Utils.escapeHtml(video.opponentPlayer)}">${isOpponentPlayerFiltered ? `<span class="filter-highlight">${window.Utils.escapeHtml(video.opponentPlayer)}</span>` : window.Utils.escapeHtml(video.opponentPlayer)}</div>` : ''}
+              ${video.opponentPlayer ? `<div class="player-name" data-filter-type="players" data-filter-value="${window.Utils.escapeHtml(video.opponentPlayer)}" data-player-id="${video.opponentPlayerId || ''}">${isOpponentPlayerFiltered ? `<span class="filter-highlight">${window.Utils.escapeHtml(video.opponentPlayer)}</span>` : window.Utils.escapeHtml(video.opponentPlayer)}</div>` : ''}
               ${video.opponentClub ? `<div class="club-name" data-filter-type="clubs" data-filter-value="${window.Utils.escapeHtml(video.opponentClub)}">${isOpponentClubFiltered ? `<span class="filter-highlight">${window.Utils.escapeHtml(video.opponentClub)}</span>` : window.Utils.escapeHtml(video.opponentClub)}</div>` : ''}
+              ${video.opponentRanking ? `<div style="font-size: 11px; color: #666; margin-top: 2px;">דירוג: ${window.Utils.escapeHtml(video.opponentRanking)}</div>` : ''}
             </div>
           </div>
           <div class="video-footer">
@@ -533,6 +535,9 @@ const UI = {
     event.preventDefault();
     event.stopPropagation();
 
+    // Get player ID from the clicked element
+    const playerId = event.target.closest('.player-name')?.getAttribute('data-player-id') || '';
+
     // Remove any existing menu
     const existingMenu = document.querySelector('.player-context-menu');
     if (existingMenu) {
@@ -542,7 +547,9 @@ const UI = {
     // Create menu
     const menu = document.createElement('div');
     menu.className = 'player-context-menu';
-    menu.innerHTML = `
+
+    // Build menu items
+    let menuHTML = `
       <div class="player-menu-item" data-action="filter">
         <i class="fa-solid fa-filter"></i>
         <span>סינון לפי שחקן</span>
@@ -552,6 +559,18 @@ const UI = {
         <span>סטטיסטיקה של השחקן</span>
       </div>
     `;
+
+    // Add TTTM link option if we have a player ID
+    if (playerId) {
+      menuHTML += `
+      <div class="player-menu-item" data-action="tttm">
+        <i class="fa-solid fa-external-link"></i>
+        <span>פתח שחקן ב-TTTM</span>
+      </div>
+      `;
+    }
+
+    menu.innerHTML = menuHTML;
 
     // Position menu near click
     document.body.appendChild(menu);
@@ -570,6 +589,10 @@ const UI = {
         } else if (action === 'stats') {
           // Navigate to player stats page
           window.location.href = `player-stats.html?player=${encodeURIComponent(playerName)}`;
+        } else if (action === 'tttm') {
+          // Open player page on TTTM
+          const playerUrl = `https://www.tttm.co.il/p/${playerId}/${encodeURIComponent(playerName)}`;
+          window.open(playerUrl, '_blank');
         }
 
         menu.remove();
