@@ -193,6 +193,29 @@ const PlayerStats = {
   },
 
   /**
+   * Get player ID and ranking
+   */
+  getPlayerIdAndRanking() {
+    // Find the most recent video with player ID and ranking
+    const videoWithData = this.playerVideos.find(video => {
+      const isCurrentPlayer = video.currentPlayer === this.playerName;
+      const playerId = isCurrentPlayer ? video.currentPlayerId : video.opponentPlayerId;
+      const ranking = isCurrentPlayer ? video.currentPlayerRanking : video.opponentRanking;
+      return playerId || ranking;
+    });
+
+    if (!videoWithData) {
+      return { playerId: null, ranking: null };
+    }
+
+    const isCurrentPlayer = videoWithData.currentPlayer === this.playerName;
+    return {
+      playerId: isCurrentPlayer ? videoWithData.currentPlayerId : videoWithData.opponentPlayerId,
+      ranking: isCurrentPlayer ? videoWithData.currentPlayerRanking : videoWithData.opponentRanking
+    };
+  },
+
+  /**
    * Render all statistics
    */
   renderStats() {
@@ -201,9 +224,18 @@ const PlayerStats = {
 
     // Player header
     const club = this.getMostCommonClub();
+    const { playerId, ranking } = this.getPlayerIdAndRanking();
+
     document.getElementById('playerName').textContent = this.playerName;
     document.getElementById('playerClub').textContent = club || 'מועדון לא ידוע';
     document.getElementById('playerSubtitle').textContent = `נתונים מבוססים על ${this.playerVideos.length} משחקים`;
+
+    // Display ranking if available
+    let rankingText = '';
+    if (ranking) {
+      rankingText = `דירוג: ${ranking}`;
+    }
+    document.getElementById('playerIdRanking').textContent = rankingText;
 
     // Overall stats
     const overallStats = this.calculateOverallStats();
@@ -329,17 +361,58 @@ const PlayerStats = {
       const resultText = result === 'win' ? 'ניצחון' : result === 'loss' ? 'הפסד' : 'לא ידוע';
       const scoreText = video.score || '?';
 
+      // Determine who is who in this match
+      const isCurrentPlayer = video.currentPlayer === this.playerName;
+
+      // Get player info
+      const playerName = this.playerName;
+      const playerRanking = isCurrentPlayer ? video.currentPlayerRanking : video.opponentRanking;
+
+      // Get opponent info
+      const opponentRanking = isCurrentPlayer ? video.opponentRanking : video.currentPlayerRanking;
+
+      // Build player details text
+      let playerDetails = '';
+      if (playerRanking) {
+        playerDetails = '<div style="font-size: 11px; color: #666; margin-top: 4px;">';
+        playerDetails += `${window.Utils.escapeHtml(playerName)}: דירוג ${playerRanking}`;
+        playerDetails += '</div>';
+      }
+
+      // Build opponent details text
+      let opponentDetails = '';
+      if (opponentRanking) {
+        if (!playerDetails) {
+          opponentDetails = '<div style="font-size: 11px; color: #666; margin-top: 4px;">';
+        } else {
+          opponentDetails = '<div style="font-size: 11px; color: #666;">';
+        }
+        opponentDetails += `${window.Utils.escapeHtml(opponent)}: דירוג ${opponentRanking}`;
+        opponentDetails += '</div>';
+      }
+
+      // Get video thumbnail
+      const thumbnail = window.Utils.getYouTubeThumbnail(video.url);
+      const thumbnailHtml = thumbnail ? `
+        <a href="${window.Utils.escapeHtml(video.url)}" target="_blank" class="match-thumbnail-link">
+          <img src="${thumbnail}" alt="Video thumbnail" class="match-thumbnail" onerror="this.style.display='none'">
+        </a>
+      ` : '';
+
       html += `
         <div class="recent-match">
           <div class="match-date-badge">${dateStr}</div>
           <div class="match-info">
             <div class="match-opponent">מול: ${window.Utils.escapeHtml(opponent)}</div>
             <div class="match-event">${window.Utils.escapeHtml(video.event)}</div>
+            ${playerDetails}
+            ${opponentDetails}
           </div>
           <div class="match-result ${resultClass}">
             ${resultText}<br>
             <small style="font-size: 12px;">${scoreText}</small>
           </div>
+          ${thumbnailHtml}
         </div>
       `;
     });

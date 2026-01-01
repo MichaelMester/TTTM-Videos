@@ -180,13 +180,46 @@
       border-radius: 6px;
       margin-bottom: 12px;
       display: grid;
-      grid-template-columns: auto 1fr auto;
+      grid-template-columns: auto 1fr auto auto;
       gap: 16px;
       align-items: center;
     }
 
     .recent-match:hover {
       background: #e3f2fd;
+    }
+
+    .match-thumbnail {
+      width: 120px;
+      height: 68px;
+      border-radius: 4px;
+      object-fit: cover;
+      transition: transform 0.2s;
+      cursor: pointer;
+    }
+
+    .match-thumbnail:hover {
+      transform: scale(1.05);
+    }
+
+    .match-thumbnail-link {
+      display: block;
+      position: relative;
+    }
+
+    .match-thumbnail-link::after {
+      content: '\f04b';
+      font-family: 'Font Awesome 6 Free';
+      font-weight: 900;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: white;
+      font-size: 24px;
+      opacity: 0.9;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+      pointer-events: none;
     }
 
     .match-date-badge {
@@ -288,6 +321,7 @@
         <div class="player-name-title" id="playerName"></div>
         <div class="player-club-title" id="playerClub"></div>
         <div class="player-subtitle" id="playerSubtitle"></div>
+        <div class="player-subtitle" id="playerIdRanking" style="margin-top: 8px; font-size: 13px;"></div>
       </div>
 
       <!-- Stats Overview -->
