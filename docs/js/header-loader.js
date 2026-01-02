@@ -130,7 +130,8 @@ function updateEnvBadge() {
     badgeText.textContent = 'אמיתי';
   } else {
     badge.classList.remove('firebase-mode');
-    badgeText.textContent = 'מקומי';
+    const filename = window.API?.getLatestBackupFilename() || 'backup file';
+    badgeText.textContent = `מקומי (${filename})`;
   }
 }
 

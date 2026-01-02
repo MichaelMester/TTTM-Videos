@@ -44,12 +44,20 @@ const API = {
    */
   async getLatestBackupFile() {
     const backupFiles = [
+      'backups/tttm-backup-all-2026-01-02.json',
       'backups/tttm-backup-all-2026-01-01.json',
       'backups/tttm-backup-all-2025-12-29.json'
     ];
 
     // Return the first file (most recent)
     return backupFiles[0];
+  },
+
+  /**
+   * Get the latest backup filename (for display)
+   */
+  getLatestBackupFilename() {
+    return 'tttm-backup-all-2026-01-02.json';
   },
 
   /**
