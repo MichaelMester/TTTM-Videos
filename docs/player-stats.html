@@ -452,20 +452,10 @@
 </head>
 
 <body dir="rtl">
-  <!-- Header -->
-  <div class="header">
-    <div class="header-content">
-      <h1>סטטיסטיקת שחקן</h1>
-      <p class="subtitle">נתונים מפורטים על משחקי השחקן</p>
-    </div>
-  </div>
+  <!-- Header Container - Dynamically loaded from header.html -->
+  <div id="header-container"></div>
 
   <div class="main-content">
-    <a href="index.html" class="back-button">
-      <i class="fa-solid fa-arrow-right"></i>
-      <span>חזרה לדף הראשי</span>
-    </a>
-
     <div id="loadingContainer" class="loading">טוען נתונים...</div>
     <div id="errorContainer"></div>
     <div id="statsContent" style="display: none;">
@@ -518,6 +508,7 @@
   </div>
 
   <!-- External JavaScript - Load in correct order -->
+  <script src="js/header-loader.js"></script>
   <script src="js/config.js"></script>
   <script src="js/utils.js"></script>
   <script src="js/api.js"></script>
