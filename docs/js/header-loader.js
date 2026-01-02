@@ -70,6 +70,84 @@ function customizeHeader() {
   if (subtitleElement) {
     subtitleElement.textContent = config.subtitle;
   }
+
+  // Show environment indicator if running locally
+  showEnvironmentIndicator();
+}
+
+/**
+ * Shows environment indicator when running on localhost
+ */
+function showEnvironmentIndicator() {
+  const envBadge = document.getElementById('envBadge');
+  if (!envBadge) return;
+
+  // Only show badge on localhost
+  const isLocalhost = window.location.hostname === 'localhost' ||
+                      window.location.hostname === '127.0.0.1' ||
+                      window.location.hostname === '';
+
+  if (!isLocalhost) {
+    return; // Don't show badge on production
+  }
+
+  // Show the badge
+  envBadge.classList.add('visible');
+
+  // Update badge based on current mode
+  updateEnvBadge();
+
+  // Add click handler to toggle menu
+  envBadge.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const menu = document.getElementById('envMenu');
+    if (menu) {
+      menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
+    }
+  });
+
+  // Close menu when clicking outside
+  document.addEventListener('click', () => {
+    const menu = document.getElementById('envMenu');
+    if (menu) {
+      menu.style.display = 'none';
+    }
+  });
+}
+
+/**
+ * Updates the environment badge appearance
+ */
+function updateEnvBadge() {
+  const mode = window.API?.getMode() || 'local';
+  const badge = document.getElementById('envBadge');
+  const badgeText = document.getElementById('envBadgeText');
+
+  if (!badge || !badgeText) return;
+
+  if (mode === 'firebase') {
+    badge.classList.add('firebase-mode');
+    badgeText.textContent = 'אמיתי';
+  } else {
+    badge.classList.remove('firebase-mode');
+    badgeText.textContent = 'מקומי';
+  }
+}
+
+/**
+ * Switch to local mode (backup files)
+ */
+function switchToLocal() {
+  localStorage.setItem('dataSource', 'local');
+  location.reload();
+}
+
+/**
+ * Switch to Firebase mode (real data)
+ */
+function switchToFirebase() {
+  localStorage.setItem('dataSource', 'firebase');
+  location.reload();
 }
 
 /**
@@ -120,3 +198,5 @@ if (document.readyState === 'loading') {
 // Make functions globally available for onclick handlers
 window.addToFavorites = addToFavorites;
 window.closeFavoritesModal = closeFavoritesModal;
+window.switchToLocal = switchToLocal;
+window.switchToFirebase = switchToFirebase;

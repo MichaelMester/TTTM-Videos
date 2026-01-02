@@ -22,6 +22,89 @@ body {
   position: sticky;
   top: 0;
   z-index: 100;
+  position: relative;
+}
+
+/* Environment Badge */
+.env-badge {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+  color: #000;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: bold;
+  cursor: pointer;
+  display: none;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  transition: all 0.2s;
+  z-index: 102;
+}
+
+.env-badge.visible {
+  display: flex;
+}
+
+.env-badge:hover {
+  transform: scale(1.05);
+  box-shadow: 0 3px 8px rgba(0,0,0,0.3);
+}
+
+.env-badge.firebase-mode {
+  background: linear-gradient(135deg, #ff6b6b 0%, #ff8e53 100%);
+  color: white;
+}
+
+.env-badge-icon {
+  font-size: 14px;
+}
+
+.env-badge-text {
+  font-size: 10px;
+  letter-spacing: 0.5px;
+}
+
+/* Environment Menu */
+.env-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 8px;
+  background: white;
+  border: 2px solid #ddd;
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  min-width: 200px;
+  overflow: hidden;
+}
+
+.env-menu-item {
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  transition: background 0.2s;
+  font-size: 13px;
+  color: #333;
+  text-align: right;
+  direction: rtl;
+}
+
+.env-menu-item:hover {
+  background: #f5f5f5;
+}
+
+.env-menu-item:active {
+  background: #e8e8e8;
+}
+
+.env-menu-icon {
+  font-size: 16px;
 }
 
 .header-content {
