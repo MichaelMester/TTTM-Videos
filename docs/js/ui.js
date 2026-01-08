@@ -64,9 +64,13 @@ const UI = {
     sortedEventNames.forEach(eventName => {
       const eventVideos = groupedVideos[eventName];
       const eventId = eventName.replace(/\s/g, '-');
+      
+      // Check if mobile device (screen width <= 768px)
+      const isMobile = window.innerWidth <= 768;
+      const collapsedClass = isMobile ? ' collapsed' : '';
 
       html += `
-        <div class="event-group" id="event-${eventId}">
+        <div class="event-group${collapsedClass}" id="event-${eventId}">
           <div class="event-header" onclick="toggleEventGroup('${eventId}')">
             <div class="event-header-left">
               <span class="event-collapse-icon">▼</span>
@@ -245,9 +249,9 @@ const UI = {
         const headerLabel = eventType === 'other' ? 'אחר' : eventType;
         const groupId = `player-group-${eventType}`;
         html += `
-          <div class="filter-group" id="${groupId}" style="margin-top: 12px;">
+          <div class="filter-group collapsed" id="${groupId}" style="margin-top: 12px;">
             <div class="filter-group-header" onclick="toggleFilterGroup('${groupId}')">
-              <span class="filter-collapse-icon">▼</span>
+              <span class="filter-collapse-icon">▶</span>
               <span style="font-size: 13px; font-weight: bold; color: #0066cc;">${headerLabel}</span>
             </div>
             <div class="filter-group-content">
@@ -326,9 +330,9 @@ const UI = {
         const headerLabel = eventType === 'other' ? 'אחר' : eventType;
         const groupId = `club-group-${eventType}`;
         html += `
-          <div class="filter-group" id="${groupId}" style="margin-top: 12px;">
+          <div class="filter-group collapsed" id="${groupId}" style="margin-top: 12px;">
             <div class="filter-group-header" onclick="toggleFilterGroup('${groupId}')">
-              <span class="filter-collapse-icon">▼</span>
+              <span class="filter-collapse-icon">▶</span>
               <span style="font-size: 13px; font-weight: bold; color: #0066cc;">${headerLabel}</span>
             </div>
             <div class="filter-group-content">
