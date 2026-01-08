@@ -64,9 +64,13 @@ const UI = {
     sortedEventNames.forEach(eventName => {
       const eventVideos = groupedVideos[eventName];
       const eventId = eventName.replace(/\s/g, '-');
+      
+      // Check if mobile device (screen width <= 768px)
+      const isMobile = window.innerWidth <= 768;
+      const collapsedClass = isMobile ? ' collapsed' : '';
 
       html += `
-        <div class="event-group" id="event-${eventId}">
+        <div class="event-group${collapsedClass}" id="event-${eventId}">
           <div class="event-header" onclick="toggleEventGroup('${eventId}')">
             <div class="event-header-left">
               <span class="event-collapse-icon">▼</span>
