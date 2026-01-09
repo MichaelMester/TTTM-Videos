@@ -21,7 +21,7 @@ const DATE_LABELS = {
 };
 
 // Event sorting priority
-const EVENT_SORT_PRIORITY = ['ליגת על', 'ליגה לאומית', 'ליגה ארצית', 'ליגה א'];
+const EVENT_SORT_PRIORITY = ['ליגת על', 'ליגה לאומית', 'ליגה ארצית', 'ליגה א', 'ליגת נוער', 'ליגת קדטים', 'ליגת מיני קדטים'];
 
 // Export for other modules
 window.APP_CONFIG = {
