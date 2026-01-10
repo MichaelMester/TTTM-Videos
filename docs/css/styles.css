@@ -663,6 +663,14 @@ h1 {
   margin-bottom: 0;
 }
 
+#event-משחקים-אחרונים .event-header {
+  background: #e3f2fd;
+}
+
+#event-משחקים-אחרונים .event-header:hover {
+  background: #bbdefb;
+}
+
 /* Video Card */
 .video-card {
   border: 1px solid #e0e0e0;
@@ -697,7 +705,7 @@ h1 {
 .youtube-view-count {
   position: absolute;
   bottom: 8px;
-  left: 8px;
+  right: 8px;
   background: rgba(0, 0, 0, 0.75);
   color: #fff;
   padding: 4px 8px;
