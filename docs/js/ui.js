@@ -52,6 +52,41 @@ const UI = {
     const groupedVideos = window.Data.groupVideosByEvent(videos);
     let html = '';
 
+    // Create "משחקים אחרונים" (Recent Games) - last 10 games from all events
+    const allVideosSorted = [...videos].sort((a, b) => {
+      const dateA = new Date(a.updatedAt || a.createdAt || 0);
+      const dateB = new Date(b.updatedAt || b.createdAt || 0);
+      return dateB - dateA; // Newest first
+    });
+    const recentGames = allVideosSorted.slice(0, 10);
+
+    // Check if mobile device (screen width <= 768px)
+    const isMobile = window.innerWidth <= 768;
+
+    // Render "משחקים אחרונים" at the top
+    if (recentGames.length > 0) {
+      html += `
+        <div class="event-group" id="event-משחקים-אחרונים">
+          <div class="event-header" onclick="toggleEventGroup('משחקים-אחרונים')">
+            <div class="event-header-left">
+              <span class="event-collapse-icon">▼</span>
+              <div class="event-name">משחקים אחרונים</div>
+            </div>
+            <div class="event-count">${recentGames.length} סרטונים</div>
+          </div>
+          <div class="video-list">
+      `;
+
+      recentGames.forEach(video => {
+        html += this.renderVideoCard(video);
+      });
+
+      html += `
+          </div>
+        </div>
+      `;
+    }
+
     // Sort event names by most recent video in each event
     const sortedEventNames = Object.keys(groupedVideos).sort((a, b) => {
       const aMostRecent = groupedVideos[a][0]; // Already sorted by date in groupVideosByEvent
@@ -65,9 +100,8 @@ const UI = {
       const eventVideos = groupedVideos[eventName];
       const eventId = eventName.replace(/\s/g, '-');
       
-      // Check if mobile device (screen width <= 768px)
-      const isMobile = window.innerWidth <= 768;
-      const collapsedClass = isMobile ? ' collapsed' : '';
+      // All events except "משחקים אחרונים" are collapsed by default
+      const collapsedClass = ' collapsed';
 
       html += `
         <div class="event-group${collapsedClass}" id="event-${eventId}">
