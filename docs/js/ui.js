@@ -52,6 +52,41 @@ const UI = {
     const groupedVideos = window.Data.groupVideosByEvent(videos);
     let html = '';
 
+    // Create "משחקים אחרונים" (Recent Games) - last 10 games from all events
+    const allVideosSorted = [...videos].sort((a, b) => {
+      const dateA = new Date(a.updatedAt || a.createdAt || 0);
+      const dateB = new Date(b.updatedAt || b.createdAt || 0);
+      return dateB - dateA; // Newest first
+    });
+    const recentGames = allVideosSorted.slice(0, 10);
+
+    // Check if mobile device (screen width <= 768px)
+    const isMobile = window.innerWidth <= 768;
+
+    // Render "משחקים אחרונים" at the top
+    if (recentGames.length > 0) {
+      html += `
+        <div class="event-group" id="event-משחקים-אחרונים">
+          <div class="event-header" onclick="toggleEventGroup('משחקים-אחרונים')">
+            <div class="event-header-left">
+              <span class="event-collapse-icon">▼</span>
+              <div class="event-name">משחקים אחרונים</div>
+            </div>
+            <div class="event-count">${recentGames.length} סרטונים</div>
+          </div>
+          <div class="video-list">
+      `;
+
+      recentGames.forEach(video => {
+        html += this.renderVideoCard(video);
+      });
+
+      html += `
+          </div>
+        </div>
+      `;
+    }
+
     // Sort event names by most recent video in each event
     const sortedEventNames = Object.keys(groupedVideos).sort((a, b) => {
       const aMostRecent = groupedVideos[a][0]; // Already sorted by date in groupVideosByEvent
@@ -65,9 +100,8 @@ const UI = {
       const eventVideos = groupedVideos[eventName];
       const eventId = eventName.replace(/\s/g, '-');
       
-      // Check if mobile device (screen width <= 768px)
-      const isMobile = window.innerWidth <= 768;
-      const collapsedClass = isMobile ? ' collapsed' : '';
+      // All events except "משחקים אחרונים" are collapsed by default
+      const collapsedClass = ' collapsed';
 
       html += `
         <div class="event-group${collapsedClass}" id="event-${eventId}">
@@ -92,6 +126,9 @@ const UI = {
     });
 
     container.innerHTML = html;
+
+    // Fetch YouTube view counts if API is enabled
+    this.loadYouTubeViewCounts(videos);
 
     // Add event listeners for player names - show menu (supports both singles and doubles)
     container.querySelectorAll('.player-name-clickable').forEach(element => {
@@ -169,8 +206,12 @@ const UI = {
     const currentPlayerHtml = this.renderPlayerNames(video.currentPlayer, video.currentPlayerId, isCurrentPlayerFiltered);
     const opponentPlayerHtml = this.renderPlayerNames(video.opponentPlayer, video.opponentPlayerId, isOpponentPlayerFiltered);
 
+    // Extract YouTube video ID for fetching stats
+    const youtubeVideoId = window.Utils.extractYouTubeId(video.url);
+    const cardId = `video-card-${videoId}`;
+
     return `
-      <div class="video-card">
+      <div class="video-card" id="${cardId}">
         ${dateBadge ? (dateBadge.className !== 'video-date-badge-date' ? `<span class="video-date-badge ${dateBadge.className}">${dateBadge.label}</span>` : `<span class="video-date-text">${dateBadge.label}</span>`) : ''}
         ${thumbnail ? `
           <div class="video-thumbnail-container">
@@ -178,6 +219,10 @@ const UI = {
               <img src="${thumbnail}" alt="Video thumbnail" class="video-thumbnail" onerror="this.style.display='none'">
             </a>
             ${isWatched ? '<div class="video-watched-overlay"><div class="video-watched-icon">✓</div></div>' : ''}
+            <div class="youtube-view-count" data-video-id="${youtubeVideoId}" style="display: none;">
+              <i class="fa-solid fa-eye"></i>
+              <span>טוען...</span>
+            </div>
           </div>
         ` : ''}
         <div class="video-card-content">
@@ -206,6 +251,51 @@ const UI = {
         </div>
       </div>
     `;
+  },
+
+  /**
+   * Load YouTube view counts for all videos
+   */
+  async loadYouTubeViewCounts(videos) {
+    if (!window.YouTubeAPI || !window.YouTubeAPI.isEnabled()) {
+      return;
+    }
+
+    try {
+      // Extract YouTube video IDs from all videos
+      const videoIdsMap = new Map();
+      videos.forEach(video => {
+        const youtubeId = window.Utils.extractYouTubeId(video.url);
+        if (youtubeId) {
+          const videoId = video.id || video.match;
+          videoIdsMap.set(youtubeId, videoId);
+        }
+      });
+
+      // Fetch stats for all videos in batch
+      const youtubeIds = Array.from(videoIdsMap.keys());
+      const stats = await window.YouTubeAPI.fetchBatchVideoStats(youtubeIds);
+
+      // Update the display for each video
+      Object.entries(stats).forEach(([youtubeId, stat]) => {
+        if (stat && stat.viewCount) {
+          const videoId = videoIdsMap.get(youtubeId);
+          const cardElement = document.getElementById(`video-card-${videoId}`);
+          if (cardElement) {
+            const viewCountElement = cardElement.querySelector('.youtube-view-count');
+            if (viewCountElement) {
+              viewCountElement.innerHTML = `
+                <i class="fa-solid fa-eye"></i>
+                <span>${window.YouTubeAPI.formatViewCount(stat.viewCount)} צפיות</span>
+              `;
+              viewCountElement.style.display = 'flex';
+            }
+          }
+        }
+      });
+    } catch (error) {
+      console.error('Error loading YouTube view counts:', error);
+    }
   },
 
   /**
